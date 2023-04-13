@@ -19,7 +19,6 @@ public class DividirArquivo {
                 ultimaLinha = linha;
             }
         } catch (IOException e) {
-            e.printStackTrace();
             return;
         }
 
@@ -71,7 +70,6 @@ public class DividirArquivo {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -82,7 +80,6 @@ public class DividirArquivo {
                 numLinhas++;
             }
         } catch (IOException e) {
-            e.printStackTrace();
             return -1;
         }
         return numLinhas;
