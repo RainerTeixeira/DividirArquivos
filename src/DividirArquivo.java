@@ -6,10 +6,16 @@ public class DividirArquivo {
 
     public static void main(String[] args) {
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setPreferredSize(new Dimension(800, 550)); // Definindo as dimensões da janela do fileChooser
+        fileChooser.setPreferredSize(new Dimension(1000, 550)); // Definindo as dimensões da janela do fileChooser
         fileChooser.showOpenDialog(null);
 
         File arquivoOriginal = fileChooser.getSelectedFile();
+
+        JFileChooser dirChooser = new JFileChooser();
+        dirChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        dirChooser.showSaveDialog(null);
+
+        File diretorioDestino = dirChooser.getSelectedFile();
 
         // Armazenando a primeira e a última linha do arquivo original
         String primeiraLinha = null;
@@ -34,7 +40,8 @@ public class DividirArquivo {
             br.readLine(); // Ignora a primeira linha
             for (int i = 1; i <= numPartes; i++) {
                 String nomeArquivo = arquivoOriginal.getName() + ".part" + i;
-                try (BufferedWriter bw = new BufferedWriter(new FileWriter(nomeArquivo))) {
+                File arquivoDestino = new File(diretorioDestino, nomeArquivo);
+                try (BufferedWriter bw = new BufferedWriter(new FileWriter(arquivoDestino))) {
 
                     // Escrevendo a primeira linha em todos os arquivos de parte
                     bw.write(primeiraLinha);
@@ -71,6 +78,7 @@ public class DividirArquivo {
                     }
                 }
             }
+            JOptionPane.showMessageDialog(null, "Arquivo dividido com sucesso!");
         } catch (IOException e) {
         }
     }
