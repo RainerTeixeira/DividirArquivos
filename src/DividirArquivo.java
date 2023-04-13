@@ -1,3 +1,4 @@
+import java.awt.Dimension;
 import java.io.*;
 import javax.swing.*;
 
@@ -5,6 +6,7 @@ public class DividirArquivo {
 
     public static void main(String[] args) {
         JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setPreferredSize(new Dimension(800, 550)); // Definindo as dimensões da janela do fileChooser
         fileChooser.showOpenDialog(null);
 
         File arquivoOriginal = fileChooser.getSelectedFile();
