@@ -9,62 +9,84 @@ destino, e especificar o número de partes desejado.
 @author Rainer Teixeira
 */
 
-
 public class DividirArquivo extends JFrame {
 
     public static void main(String[] args) {
+        // Solicita ao usuário que selecione o arquivo original
         File arquivoOriginal = selecionarArquivo("Selecione o arquivo original");
-        File diretorioDestino = selecionarDiretorio("Selecione o diretório de destino");
+        if (arquivoOriginal == null) {
+            System.exit(0);
+        }
 
+        // Solicita ao usuário que selecione o diretório de destino
+        File diretorioDestino = selecionarDiretorio("Selecione o diretório de destino");
+        if (diretorioDestino == null) {
+            System.exit(0);
+        }
+
+        // Solicita ao usuário que informe o número de partes desejado
         int numPartes = obterNumeroDePartes();
 
+        // Divide o arquivo original em várias partes
         dividirArquivo(arquivoOriginal, diretorioDestino, numPartes);
     }
 
+    // Método que exibe uma janela de seleção de arquivo
     private static File selecionarArquivo(String titulo) {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle(titulo);
         fileChooser.setPreferredSize(new Dimension(1000, 550));
-        fileChooser.showOpenDialog(null);
-        return fileChooser.getSelectedFile();
+        int result = fileChooser.showOpenDialog(null);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            return fileChooser.getSelectedFile();
+        } else {
+            return null;
+        }
     }
 
+    // Método que exibe uma janela de seleção de diretório
     private static File selecionarDiretorio(String titulo) {
         JFileChooser dirChooser = new JFileChooser();
         dirChooser.setDialogTitle(titulo);
         dirChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        dirChooser.showSaveDialog(null);
-        return dirChooser.getSelectedFile();
+        int result = dirChooser.showSaveDialog(null);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            return dirChooser.getSelectedFile();
+        } else {
+            return null;
+        }
     }
 
+    // Método que solicita ao usuário o número de partes desejado
     private static int obterNumeroDePartes() {
         String input = JOptionPane.showInputDialog("Quantas partes deseja dividir o arquivo?");
         return Integer.parseInt(input);
     }
 
-    private static void dividirArquivo(File arquivoOriginal, File diretorioDestino, int numPartes) {
-        try {
-            String primeiraLinha = lerPrimeiraLinha(arquivoOriginal);
-            String ultimaLinha = lerUltimaLinha(arquivoOriginal);
-            int numLinhas = contarLinhas(arquivoOriginal);
-            int linhasPorParte = numLinhas / numPartes;
-            int linhasRestantes = numLinhas % numPartes;
+// Método que divide o arquivo original em várias partes
+private static void dividirArquivo(File arquivoOriginal, File diretorioDestino, int numPartes) {
+    try {
+        String primeiraLinha = lerPrimeiraLinha(arquivoOriginal);
+        String ultimaLinha = lerUltimaLinha(arquivoOriginal);
+        int numLinhas = contarLinhas(arquivoOriginal);
+        int linhasPorParte = numLinhas / numPartes;
+        int linhasRestantes = numLinhas % numPartes;
 
-            try (BufferedReader br = new BufferedReader(new FileReader(arquivoOriginal))) {
-                br.readLine(); // Ignora a primeira linha
-                for (int i = 1; i <= numPartes; i++) {
-                    String nomeArquivo = arquivoOriginal.getName().substring(0, arquivoOriginal.getName().lastIndexOf(".")) + ".part" + i + arquivoOriginal.getName().substring(arquivoOriginal.getName().lastIndexOf("."));
-                    File arquivoDestino = new File(diretorioDestino, nomeArquivo);
-                    try (BufferedWriter bw = new BufferedWriter(new FileWriter(arquivoDestino))) {
-                        escreverConteudoDeParte(br, bw, primeiraLinha, ultimaLinha, linhasPorParte, linhasRestantes, i, numPartes);
-                    }
+        try (BufferedReader br = new BufferedReader(new FileReader(arquivoOriginal))) {
+            br.readLine(); // Ignora a primeira linha
+            for (int i = 1; i <= numPartes; i++) {
+                String nomeArquivo = arquivoOriginal.getName().substring(0, arquivoOriginal.getName().lastIndexOf(".")) + ".part" + i + arquivoOriginal.getName().substring(arquivoOriginal.getName().lastIndexOf("."));
+                File arquivoDestino = new File(diretorioDestino, nomeArquivo);
+                try (BufferedWriter bw = new BufferedWriter(new FileWriter(arquivoDestino))) {
+                    escreverConteudoDeParte(br, bw, primeiraLinha, ultimaLinha, linhasPorParte, linhasRestantes, i, numPartes);
                 }
-                JOptionPane.showMessageDialog(null, "Arquivo dividido com sucesso!");
             }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Ocorreu um erro ao dividir o arquivo: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Arquivo dividido com sucesso!");
         }
+    } catch (IOException e) {
+        JOptionPane.showMessageDialog(null, "Ocorreu um erro ao dividir o arquivo: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
     }
+}
 
     private static String lerPrimeiraLinha(File arquivo) throws IOException {
         try (BufferedReader br = new BufferedReader(new FileReader(arquivo))) {
@@ -128,3 +150,5 @@ public class DividirArquivo extends JFrame {
         }
     }
 }
+
+
