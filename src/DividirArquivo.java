@@ -2,7 +2,6 @@ import java.awt.Dimension;
 import java.io.*;
 import javax.swing.*;
 /**
-
 Esta classe implementa a funcionalidade de dividir um arquivo em múltiplas
 partes. O usuário deve selecionar o arquivo original e o diretório de
 destino, e especificar o número de partes desejado.
